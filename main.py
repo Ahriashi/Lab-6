@@ -7,7 +7,7 @@ def main():
         nums[i][j] = 1
       elif i < j:
         while True:
-          nums[i][j] = float(input(f"Введите коэфициент сравнения {i+1} s {j+1}(ot 0 do 9): "))
+          nums[i][j] = float(input(f"Введите коэфициент сравнения {i+1} s {j+1}(от 0 до 9): "))
           if nums[i][j] > 9 or nums[i][j] <= 0:
             print("Недопустимое значение, попробуйте ещё раз\n")
           else:
