@@ -1,77 +1,37 @@
-import sys
-import msvcrt as m
+def main():
+  count = int(input("Введите колличество критериев: "))
+  nums = [[0 for j in range(count)] for i in range(count)]
+  for i in range(count):
+    for j in range(count):
+      if i == j:
+        nums[i][j] = 1
+      elif i < j:
+        while True:
+          nums[i][j] = float(input(f"Введите коэфициент сравнения {i+1} s {j+1}(ot 0 do 9): "))
+          if nums[i][j] > 9 or nums[i][j] <= 0:
+            print("Недопустимое значение, попробуйте ещё раз\n")
+          else:
+            break
+  for i in range(count):
+    for j in range(count):
+      if i > j:
+        nums[i][j] = 1 / nums[j][i]
 
-#Вспомогательная функция для определения целочисленности
-def convertToInt(n):
-    try:
-        n = int(n)
-    except Exception:
-        return -1
-    return n
-#Ввод отношений критериев в матрицу n*n
-def inputTable(table, n):
-    #Ввод отношений для верхней половины матрицы, считая от главной диагонали
-    for i in range(n):
-        for j in range(n):
-            if (i == j):
-                table[i][j] = 1 #Элементы главной диагонали равны единице
-            if (i < j):
-                while table[i][j] == 0: #Для выхода из цикла ввода элемента ожидается верный ввод
-                    temp = input("Введите отношение критерия {0} к критерию {1} ".format(i+1, j+1))
-                    temp = convertToInt(temp)
-                    if (temp == -1) or (1 <= temp <= 9) == False: #Проверка на соответствие условиям
-                        print('Отношение должно быть целым числом от 1 до 9')
-                    else:
-                        table[i][j] = temp
-    #Отражение матрицы по главной диагонали и возведение её элементов в -1 степень
-    for i in range(n):
-        for j in range(n):
-            if (i > j):
-                table[i][j] = 1/table[j][i]
-    return table
-#Вывод матрицы попарных сравнений
-def outputTablePrecise(table, n):
-    for i in range(n):
-        for j in range(n):
-            print("{0:.4f}".format(table[i][j]), end=" ")
-        print()
-#Cуммирование всех элементов матрицы
-def tableSum(table, n):
+  vec = []
+  sum = 0
+  print("Итоговая матрица:")
+  for i in range(count):
+    for j in range(count):
+      print(f"{nums[i][j]:.2f}  ", end="")
+      sum += nums[i][j]
+    vec.append(sum)
     sum = 0
-    for i in range(n):
-        for j in range(n):
-            sum += table[i][j]
-    return sum
-#Расчёт весовых коэффициентов
-def countWQ(table,n,sum):
-    columnSum = 0
-    arrayWQ  = list()
-    #расчёт суммы отношений для каждого критерия
-    for i in range(n):
-        for j in range(n):
-            columnSum += table[j][i]
-        arrayWQ.append(columnSum/sum)
-    return arrayWQ
+    print()
+  for i in range(count):
+    sum += vec[i]
+  print("Весовые коэфициенты: ", end="")
+  for i in range(count):
+    print(f"{i+1} - {vec[i]/sum:.2f}, ", end="")
 
-#Основная чать программы
-n = 0
-#Ввод количества критериев
-while n == 0: #Цикл будет запрашивать ввод, пока количество не будет положительным целым числом
-    n = input("Введите количество критериев: ")
-    n = convertToInt(n)
-    if (n == -1) or (n < 1):
-        print("Количество критериев должно быть положительным целым числом")
-        n = 0
-a = [[0] * n for i in range(n)] # Создание двумерного массива n*n
-a = inputTable(a,n)
-print("\nМатрица попарного сравнения: ")
-outputTablePrecise(a,n)
-a_sum = tableSum(a,n)
-print("\nСумма элементов матрицы: {0:.4f}".format(a_sum))
-WQ = countWQ(a,n,a_sum) #Создание массива, хранящего весовые коэффициенты
-WQ.reverse()
-print("Весовые коэффициенты:", end=" ")
-for elem in WQ:
-    print("{0:.2f}".format(elem), end=" ") #Форматирование вывода для соответствия условиям задачи
-m.getch()
-sys.exit()
+if __name__ == "__main__":
+  main()
